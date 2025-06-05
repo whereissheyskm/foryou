@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你还记得吗 | 初二你坐在我前面的时候 我是真开心 第一次有人这么注意我</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #f8f9fa;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 5s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* 流星效果 */
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0), #fff);
+            animation: shooting var(--shooting-duration, 2s) linear infinite;
+            top: var(--top, 0);
+            left: var(--left, 0);
+            opacity: 0;
+        }
+        
+        @keyframes shooting {
+            0% {
+                opacity: 0;
+                transform: translateX(0) translateY(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(var(--tx, 300px)) translateY(var(--ty, 150px));
+            }
+        }
+        
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 标题样式 */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 2s ease-out;
+        }
+        
+        .title {
+            font-size: 4rem;
+            font-weight: 300;
+            background: linear-gradient(to right, #ff7eb3, #ff758c, #ff7eb3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+            position: relative;
+        }
+        
+        .title::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #ff7eb3, #ff758c);
+            border-radius: 3px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* 告白卡片 */
+        .message-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .message-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 117, 140, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .message-text {
+            font-size: 2.2rem;
+            line-height: 1.6;
+            font-family: 'Ma Shan Zheng', cursive;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            position: relative;
+            padding: 1rem;
+        }
+        
+        .message-author {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #ffb6c1;
+            margin-top: 1rem;
+        }
+        
+        /* 交互按钮 */
+        .btn {
+            background: linear-gradient(45deg, #ff7eb3, #ff758c);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+            margin: 0.5rem;
+            min-width: 280px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+        }
+        
+        /* 特殊信息卡片 */
+        .special-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #333;
+        }
+        
+        .special-message.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .special-message h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ff6b6b;
+        }
+        
+        .special-message p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        /* 装饰元素 */
+        .ornament {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 126, 179, 0.2) 0%, rgba(255, 117, 140, 0.1) 70%, transparent 100%);
+            z-index: -1;
+        }
+        
+        .ornament-1 {
+            top: 10%;
+            left: 10%;
+        }
+        
+        .ornament-2 {
+            bottom: 15%;
+            right: 10%;
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+            width: 100%;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            .message-text {
+                font-size: 1.8rem;
+            }
+            
+            .message-card {
+                padding: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .message-text {
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+        
+        /* 星光跟随效果 */
+        .follow-star {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.2s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff6b6b;
+            animation: float-heart 8s linear forwards;
+            z-index: 999;
+        }
+        
+        @keyframes float-heart {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- 装饰元素 -->
+    <div class="ornament ornament-1"></div>
+    <div class="ornament ornament-2"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="title">不知道你会记得我多久 两年？感觉有点长 你只要多记住我一秒我就知足了 谢谢你之前对我的感情 我会永远记得你的 哈哈哈哈</h1>
+            <p class="subtitle">你是我第一个喜欢的女孩 也是我除了我家里人梦见最多的一个女孩 每梦见你一次我都好开心</p>
+        </header>
+        
+        <main>
+            <div class="message-card">
+                <p class="message-text" id="message">好きだ。君のことが好きだ。ずっと前から、君のことが好きだった。</p>
+                <p class="message-author" id="author">——《君の名は》</p>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn" id="newMessageBtn">
+                    <i class="fas fa-sync-alt"></i> 好羞耻的东西 不过挺符合初二的我的气质 点一下？
+                </button>
+                
+                <button class="btn" id="specialBtn1">
+                    <i class="fas fa-gift"></i> 特别消息①
+                </button>
+                
+                <button class="btn" id="specialBtn2">
+                    <i class="fas fa-heart"></i>特别消息②
+                </button>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 6.13 没弄音乐 | 雀氏做不动了 哈哈 | 还有你现在喜欢听啥？</p>
+        </footer>
+    </div>
+    
+    <!-- 特殊消息卡片 -->
+    <div class="special-message" id="specialMessage1">
+        <h3>特别消息①</h3>
+        <p>X 我的生日别给我买礼物 我已经知足了 你知道当时你主动问我要我的生日时间的时候我有多开心吗 love you</p>
+        <p style="font-style: italic; color: #ff6b6b; margin-top: 20px;">（码了好久 吐血 这也是为啥之前没咋理你 还让你生气了）</p>
+        <button class="close-btn" onclick="closeMessage(1)">关闭</button>
+    </div>
+    
+    <div class="special-message" id="specialMessage2">
+        <h3>特别消息②</h3>
+        <p>还有生日快乐 第一次给除了亲人以外的人过生日确实有点不知所措 谢谢你</p>
+        <p>想来想去还是通过这种方式来作为给你的礼物</p>
+        <p style="font-weight: bold; color: #ff6b6b; margin-top: 15px;">不知道你喜不喜欢？确实不咋浪漫的感觉 不过你愿意点开我就知足了</p>
+        <button class="close-btn" onclick="closeMessage(2)">关闭</button>
+    </div>
+    
+    <!-- 星光跟随效果容器 -->
+    <div id="followStars"></div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 300;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机位置
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // 随机大小（0.5px 到 3px）
+                const size = Math.random() * 2.5 + 0.5;
+                
+                // 随机动画持续时间
+                const duration = Math.random() * 5 + 3;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--duration', `${duration}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 创建流星
+        function createShootingStars() {
+            const starsContainer = document.getElementById('stars');
+            
+            setInterval(() => {
+                const shootingStar = document.createElement('div');
+                shootingStar.classList.add('shooting-star');
+                
+                // 随机位置
+                const startX = Math.random() * 20;
+                const startY = Math.random() * 30;
+                
+                // 随机移动距离
+                const tx = Math.random() * 300 + 200;
+                const ty = Math.random() * 100 + 50;
+                
+                // 随机动画持续时间
+                const duration = Math.random() * 1 + 0.5;
+                
+                shootingStar.style.setProperty('--top', `${startY}%`);
+                shootingStar.style.setProperty('--left', `${startX}%`);
+                shootingStar.style.setProperty('--tx', `${tx}px`);
+                shootingStar.style.setProperty('--ty', `${ty}px`);
+                shootingStar.style.setProperty('--shooting-duration', `${duration}s`);
+                
+                starsContainer.appendChild(shootingStar);
+                
+                // 流星结束后移除
+                setTimeout(() => {
+                    shootingStar.remove();
+                }, duration * 1000);
+                
+            }, 2000); // 每2秒创建一个新流星
+        }
+        
+        // 告白语句库
+        const messages = [
+            {
+                text: "好きだ。君のことが好きだ。ずっと前から、君のことが好きだった。",
+                author: "《君の名は》"
+            },
+            {
+                text: "君と会いたかった。ずっと前から、君と会いたかった。",
+                author: "《天気の子》"
+            },
+            {
+                text: "もしも、もう一度あなたに会えるなら、たった一言伝えたい。ありがとう。",
+                author: "《時をかける少女》"
+            },
+            {
+                text: "君が好きだ。空が好きだと言うくらいに。",
+                author: "《とらドラ!》"
+            },
+            {
+                text: "僕は君に恋をしている。それは確かなことだ。",
+                author: "《四月は君の嘘》"
+            },
+            {
+                text: "君の笑顔が僕の宝物だ。",
+                author: "《CLANNAD》"
+            },
+            {
+                text: "たとえ世界が君を嫌っても、僕だけは君の味方だ。",
+                author: "《ソードアート・オンライン》"
+            },
+            {
+                text: "君と一緒にいると、時間が止まってほしいと思う。",
+                author: "《ハイキュー!!》"
+            }
+        ];
+        
+        // 更新告白语句
+        function updateMessage() {
+            const messageElement = document.getElementById('message');
+            const authorElement = document.getElementById('author');
+            
+            // 随机选择一个告白
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            const message = messages[randomIndex];
+            
+            // 添加淡出效果
+            messageElement.style.opacity = 0;
+            authorElement.style.opacity = 0;
+            
+            setTimeout(() => {
+                messageElement.textContent = message.text;
+                authorElement.textContent = `——${message.author}`;
+                
+                // 添加淡入效果
+                messageElement.style.opacity = 1;
+                authorElement.style.opacity = 1;
+                messageElement.style.transition = "opacity 1s ease";
+                authorElement.style.transition = "opacity 1s ease";
+            }, 500);
+            
+            // 创建漂浮的爱心
+            createFloatingHearts(15);
+        }
+        
+        // 创建漂浮的爱心
+        function createFloatingHearts(count) {
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                
+                // 随机位置
+                const startX = Math.random() * window.innerWidth;
+                heart.style.left = `${startX}px`;
+                heart.style.top = `${window.innerHeight}px`;
+                
+                // 随机动画持续时间
+                const duration = Math.random() * 3 + 5;
+                heart.style.animationDuration = `${duration}s`;
+                
+                document.body.appendChild(heart);
+                
+                // 动画结束后移除爱心
+                setTimeout(() => {
+                    heart.remove();
+                }, duration * 1000);
+            }
+        }
+        
+        // 显示特殊消息
+        function showSpecialMessage(num) {
+            document.getElementById(`specialMessage${num}`).classList.add('active');
+        }
+        
+        // 关闭特殊消息
+        function closeMessage(num) {
+            document.getElementById(`specialMessage${num}`).classList.remove('active');
+        }
+        
+        // 创建星光跟随效果
+        function createFollowStars() {
+            const container = document.getElementById('followStars');
+            const starCount = 5;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('follow-star');
+                star.style.opacity = "0";
+                container.appendChild(star);
+            }
+            
+            document.addEventListener('mousemove', (e) => {
+                const stars = document.querySelectorAll('.follow-star');
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                stars.forEach((star, index) => {
+                    setTimeout(() => {
+                        star.style.left = `${mouseX - 4}px`;
+                        star.style.top = `${mouseY - 4}px`;
+                        star.style.opacity = "0.8";
+                        
+                        // 添加延迟消失效果
+                        setTimeout(() => {
+                            star.style.opacity = "0";
+                        }, 100);
+                    }, index * 50); // 每颗星星有50ms延迟
+                });
+            });
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            createShootingStars();
+            createFollowStars();
+            
+            // 添加按钮事件
+            document.getElementById('newMessageBtn').addEventListener('click', updateMessage);
+            document.getElementById('specialBtn1').addEventListener('click', () => showSpecialMessage(1));
+            document.getElementById('specialBtn2').addEventListener('click', () => showSpecialMessage(2));
+            
+            // 初始动画
+            setTimeout(() => {
+                document.querySelector('.message-text').style.animation = "fadeIn 2s ease-out";
+                document.querySelector('.message-author').style.animation = "fadeIn 2s ease-out";
+            }, 500);
+            
+            // 初始漂浮爱心
+            setInterval(() => {
+                createFloatingHearts(3);
+            }, 5000);
+        });
+    </script>
+    
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+</body>
+</html>
